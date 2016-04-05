@@ -1,3 +1,7 @@
-This is the source code for [https://sneakertack.github.io/postcss-playground/](https://sneakertack.github.io/postcss-playground/).
+# Workflow
 
-If cloning, remember to follow the instructions in the readme in `modules/`.
+Then do `npm install` in this folder. Then, edit `modules/source.js`. Then, run:
+
+`npm run build`
+
+This compiles `bundle.js`, which is loaded by `index.html`.

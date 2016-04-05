@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "autoprefixer-core": "^5.1.11",
+    "browserify": "^13.0.0",
+    "postcss": "^4.1.16",
+    "postcss-cssnext": "^2.5.2",
+    "postcss-discard-duplicates": "^2.0.1",
+    "postcss-nested": "^0.2.2",
+    "postcss-scss": "^0.1.7",
+    "postcss-simple-vars": "^0.2.4",
+    "postcss-spiffing": "0.0.4"
+  },
+  "scripts": {
+    "build": "browserify modules/source.js > modules/bundle.js"
+  }
+}

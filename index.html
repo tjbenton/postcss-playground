@@ -11,26 +11,26 @@
     /**
      * Big-picture layout.
      */
-    
+
     * {box-sizing: border-box;}
     html, body {height: 100%;}
     body {
       padding: 10px;
     }
-    
+
     header {overflow: auto;} /* Clearfix. */
     header > div {float: left;}
 
     header {height: 30%;}
     section {height: 70%;}
-  
+
     section {
       overflow-x: auto;
       overflow-y: hidden;
       white-space: nowrap;
     }
     section > div, section > c-ast-chain {display: inline-block; height: 97%;}
-    c-ast-chain > div {display: inline-block; height: 100%;} 
+    c-ast-chain > div {display: inline-block; height: 100%;}
 
     .CodeMirror {height: 100%;}
 
@@ -61,7 +61,7 @@
       margin-top: 0;
       margin-bottom: 10px;
     }
-  
+
     /* Look disabled by default. */
     textarea {
       border: none;
@@ -130,7 +130,7 @@
     /**
      * Other supporting components (usually Ractive)
      */
-    
+
     c-preproc-error {
       position: absolute;
       bottom: 0;
@@ -162,7 +162,7 @@
 
 </head>
 <body>
-  
+
   <header>
     <div class="l-introduction" style="width: 50%; height: 100%; overflow: auto; line-height: 1.5;">
       <h1>PostCSS Playground</h1>
@@ -172,7 +172,7 @@
         <iframe src="https://ghbtns.com/github-btn.html?user=sneakertack&repo=postcss-playground&type=fork&count=true" frameborder="0" scrolling="0" width="80px" height="20px"></iframe>
         <iframe src="https://ghbtns.com/github-btn.html?user=sneakertack&type=follow&count=true" frameborder="0" scrolling="0" width="200px" height="20px"></iframe>
       </div>
-      
+
       <p>This page lets you try your hand at building a simple PostCSS processor. <strong>Processor code</strong> goes on the right. <strike>CSS</strike> <strong>Source code</strong> goes in below-left, and it gets transformed (from left to right) into valid CSS.</p>
       <p>PostCSS has <a href="https://github.com/postcss/postcss#plugins" target="_blank">many plugins</a>. For this demo, the following example plugins have been made available in global scope: <a class="no-decoration" href="https://github.com/HashanP/postcss-spiffing" target="_blank"><code class="code">spiffing</code></a>, <a class="no-decoration" href="https://github.com/postcss/autoprefixer-core" target="_blank"><code class="code">autoprefixer</code></a>, <a class="no-decoration" href="https://github.com/postcss/postcss-simple-vars" target="_blank"><code class="code">simpleVars</code></a>, and <a class="no-decoration" href="https://github.com/postcss/postcss-nested" target="_blank"><code class="code">nested</code></a>.</p>
     </div>
@@ -183,10 +183,13 @@
 var postcss = require('postcss');
 
 var yourProcessor = postcss()
-  // .use(spiffing)
-  // .use(autoprefixer)
-  // .use(simpleVars)
-  // .use(nested)
+  .use(require('autoprefixer-core'))
+  // .use(require('postcss-discard-duplicates'))
+  // .use(require('postcss-scss'))
+  // .use(require('postcss-cssnext'))
+  // .use(require('postcss-spiffing'))
+  // .use(require('postcss-simple-vars'))
+  // .use(require('postcss-nested'))
   // Add whatever plugins you want.
 
 // Output compiled CSS.
@@ -204,7 +207,7 @@ var output = yourProcessor.process(source).css;</textarea>
       </script>
     </div>
   </header>
-  
+
   <div class="midsection-unflow">
     <hr class="seperator">
     <c-preferences></c-preferences>
@@ -225,17 +228,18 @@ var output = yourProcessor.process(source).css;</textarea>
         }
       });
     </script>
-    
+
   </div>
-  
+
   <section id="mainSection" class="pad-for-midsection">
 
     <!-- Beginning -->
     <div class="l-source siamese-right" style="width: 300px">
       <textarea name="source" id="source" class="cm-rounded" code-mirror data-code-label="Source" data-code-linenums="true">
 body {
-  colour: white;
-  background-colour: grey;
+  color: white;
+  background-color: grey;
+  transform: rotate(30deg);
 }</textarea>
     </div>
 
@@ -263,7 +267,7 @@ body {
     <div id="lCss" class="l-css siamese-left" style="width: 300px">
       <textarea name="css" id="css" class="cm-rounded" code-mirror data-code-mode="css" data-code-label="CSS"  data-code-read-only="nocursor">CSS goes here.</textarea>
     </div>
-    
+
   </section>
 
   <!-- DEPENDENCIES -->
@@ -271,13 +275,13 @@ body {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.8.0/lodash.min.js"></script>
 
   <!-- CodeMirror. -->
-  <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/addon/fold/foldcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/addon/fold/foldgutter.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/addon/fold/brace-fold.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/javascript/javascript.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/css/css.min.js"></script>
-  
+
   <!-- Things from Node. -->
   <script src="modules/bundle.js"></script>
 
@@ -286,17 +290,13 @@ body {
   <!-- BEHAVIOUR -->
   <script>
     /* Hoisting: functions are defined at the bottom. */
-
+    console.log(window.modules)
     patchPostcssForDemo(window.modules.postcss);
     window.postcss = require('postcss');
     // Make example postcss plugins immediately available without require-ing in processor code.
-    window.spiffing = require('spiffing');
-    window.autoprefixer = require('autoprefixer');
-    window.simpleVars = require('simpleVars');
-    window.nested = require('nested');
 
     // Init.
-    digestTextareasToCodeMirrors();    
+    digestTextareasToCodeMirrors();
 
     // Patch: Only allow the user to edit plugin choice in the preprocessor code window.
     codeMirrors.preprocessor.markText({line: 0}, {line: 3}, {atomic: true, readOnly: true, inclusiveLeft: true});
@@ -402,7 +402,7 @@ body {
       } else {
         codeMirrors.css.getTextArea().value = lastAst.toResult().css;
       }
-      
+
 
     }
 
@@ -480,9 +480,9 @@ body {
     /**
      * TOOLING / PATCHES / OVERRIDES
      */
-    
-    function require(moduleName) {
-      return window.modules[moduleName];
+
+    function require(name) {
+      return window.modules[name];
     }
 
     function patchPostcssForDemo(postcss) {
@@ -494,7 +494,7 @@ body {
         use.apply(subprocessor, arguments);
         subprocessorChain.push(subprocessor);
 
-        return use.apply(this, arguments);        
+        return use.apply(this, arguments);
       };
     }
 
